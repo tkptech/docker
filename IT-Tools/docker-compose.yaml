@@ -2,13 +2,26 @@ version: "3.9"
 services:
   it-tools:
     image: corentinth/it-tools:latest
+    container_name: IT-Tools
     ports:
       - 8085:80
     restart: always
-    container_name: IT-Tools
-
-#    networks:
-#      - galaxy
-#networks:
-#  galaxy:  # Updated to correct network name
-#    driver: bridge
+    label:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.entrypoints=http"
+      - "traefik.http.routers.jellyfin.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.middlewares.jellyfin-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyfin.middlewares=jellyfin-https-redirect"
+      - "traefik.http.routers.jellyfin-secure.entrypoints=https"
+      - "traefik.http.routers.jellyfin-secure.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.routers.jellyfin-secure.tls=true"
+      - "traefik.http.routers.jellyfin-secure.service=it-tools"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8085"
+      - "traefik.docker.network=proxy"
+    networks:
+      proxy:
+    security_opt:
+      - no-new-privileges:true
+networks:
+  proxy:
+    external: true
