@@ -1,0 +1,159 @@
+version: '3.9'
+services:
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - 8191:8191
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./radarr:/config
+      - /mnt/media:/media
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./sonarr:/config
+      - /mnt/media:/media
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./lidarr:/config
+      - /mnt/media:/media
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  readarr:
+    container_name: readarr
+    image: ghcr.io/hotio/readarr
+    ports:
+      - 8787:8787
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./readarr:/config
+      - /mnt/media:/media
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./bazarr:/config
+      - /mnt/media:/media
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - 5055:5055
+    volumes:
+      - ./jellyseerr:/app/config
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Asia/Ho_Chi_Minh
+      - WEBUI_PORT=8080
+    volumes:
+      - ./qbittorrent:/config
+      - /mnt/media:/media
+    ports:
+      - 8080:8080
+      - 63636:63636
+      - 63636:63636/udp
+    restart: unless-stopped
+    networks:
+      - media-network
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    user: 1000:1000
+    container_name: recyclarr
+    volumes:
+      - ./recyclarr:/config
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    restart: unless-stopped
+    networks:
+      - media-network 
+networks:
+  media-network:
+    external: true
