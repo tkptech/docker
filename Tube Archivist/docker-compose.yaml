@@ -1,0 +1,79 @@
+version: '3.5'
+
+services:
+  tubearchivist:
+    container_name: tubearchivist
+    restart: always
+    image: bbilly1/tubearchivist
+    # ports:
+    #  - 8057:8000 # change Port 80 (left side of : ) to free port of your choice
+    volumes:
+      - ./media:/youtube
+      - ./cache:/cache
+    environment:
+      - ES_URL=http://archivist-es:9200     # needs protocol e.g. http and port
+      - REDIS_HOST=archivist-redis          # don't add protocol
+      - HOST_UID=1000
+      - HOST_GID=1000
+      - TA_HOST=tubearchivist.tkp.io.vn         # set your host name
+      - TA_USERNAME=voquyen84             # your initial TA credentials
+      - TA_PASSWORD=quyenvo@0904              # your initial TA credentials
+      - ELASTIC_PASSWORD=yourpassword         # set password for Elasticsearch
+      - TZ=Asia/Ho_Chi_Minh                   # set your time zone
+    depends_on:
+      - archivist-es
+      - archivist-redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tubearchivist.entrypoints=http"
+      - "traefik.http.routers.tubearchivist.rule=Host(`tubearchivist.tkp.io.vn`)"
+      - "traefik.http.middlewares.tubearchivist-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.tubearchivist.middlewares=tubearchivist-https-redirect"
+      - "traefik.http.routers.tubearchivist-secure.entrypoints=https"
+      - "traefik.http.routers.tubearchivist-secure.rule=Host(`tubearchivist.tkp.io.vn`)"
+      - "traefik.http.routers.tubearchivist-secure.tls=true"
+      - "traefik.http.routers.tubearchivist-secure.service=tubearchivist"
+      - "traefik.http.services.tubearchivist.loadbalancer.server.port=8000"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+
+  archivist-redis:
+    image: redis/redis-stack-server
+    container_name: archivist-redis
+    restart: always
+    networks:
+      - proxy
+    expose:
+      - "6379"
+    volumes:
+      - ./redis:/data
+    depends_on:
+      - archivist-es
+
+  archivist-es:
+    image: bbilly1/tubearchivist-es # use arm or amd image
+    container_name: archivist-es
+    restart: always
+    networks:
+      - proxy
+    environment:
+      - "ELASTIC_PASSWORD=yourpassword"       # matching Elasticsearch password
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "xpack.security.enabled=true"
+      - "discovery.type=single-node"
+      - "path.repo=/usr/share/elasticsearch/data/snapshot"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./es:/usr/share/elasticsearch/data    # check for permission error when using bind mount, see readme
+    expose:
+      - "9200"
+
+networks:
+  proxy:
+    external: true
