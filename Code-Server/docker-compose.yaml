@@ -8,9 +8,9 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Ho_Chi_Minh
-      - PASSWORD=password #optional
+      - PASSWORD=quyenvo@0904 #optional
       - HASHED_PASSWORD= #optional
-      - SUDO_PASSWORD=password #optional
+      - SUDO_PASSWORD=quyenvo@0904 #optional
       - SUDO_PASSWORD_HASH= #optional
       - PROXY_DOMAIN=code-server.tkp.io.vn #optional
       - DEFAULT_WORKSPACE=/config/workspace #optional
