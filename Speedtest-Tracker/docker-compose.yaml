@@ -8,12 +8,7 @@ services:
       - PUID=1000
       - PGID=1000
       - APP_KEY=base64:uztryN3qc4bjShtib+zp99xOVD9TPxLE7Bc3q4/kSyk=
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=speedtest_tracker
-      - DB_USERNAME=speedy
-      - DB_PASSWORD=password
+      - DB_CONNECTION=sqlite
       - SPEEDTEST_SCHEDULE=5 * * * *
       - SPEEDTEST_SERVERS=54812
       - PRUNE_RESULTS_OLDER_THAN=
@@ -43,18 +38,6 @@ services:
       - proxy
     security_opt:
       - no-new-privileges:true     
-  db:
-    image: mariadb:10
-    restart: always
-    environment:
-      - MARIADB_DATABASE=speedtest_tracker
-      - MARIADB_USER=speedy
-      - MARIADB_PASSWORD=password
-      - MARIADB_RANDOM_ROOT_PASSWORD=true
-    volumes:
-      - speedtest-db:/var/lib/mysql
-volumes:
-  speedtest-db:
 networks:
   proxy:
     external: true
