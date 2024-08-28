@@ -55,3 +55,6 @@ services:
       - speedtest-db:/var/lib/mysql
 volumes:
   speedtest-db:
+networks:
+  proxy:
+    external: true
