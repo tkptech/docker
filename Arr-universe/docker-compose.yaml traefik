@@ -16,7 +16,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/radarr:/config
+      - ./radarr:/config
       - /mnt/media:/data
     labels:
       - "traefik.enable=true"
@@ -50,7 +50,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/sonarr:/config
+      - ./sonarr:/config
       - /mnt/media:/data
     labels:
       - "traefik.enable=true"
@@ -82,7 +82,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/prowlarr:/config
+      - ./prowlarr:/config
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.entrypoints=http"
@@ -115,7 +115,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/bazarr:/config
+      - ./bazarr:/config
       - /mnt/media:/data/media
     labels:
       - "traefik.enable=true"
@@ -146,7 +146,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/qbittorrent:/config
+      - ./qbittorrent:/config
       - /mnt/media:/data
     restart: unless-stopped
     labels:
@@ -178,7 +178,7 @@ services:
         - TZ=Asia/Ho_Chi_Minh
     volumes:
         - /etc/localtime:/etc/localtime:ro
-        - /home/user/docker/torrents/lidarr:/config
+        - ./lidarr:/config
         - /mnt/media:/data
     restart: unless-stopped
     labels:
@@ -211,7 +211,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /home/user/docker/torrents/overseerr:/config
+      - ./overseerr:/config
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
