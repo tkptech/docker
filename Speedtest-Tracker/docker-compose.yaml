@@ -1,13 +1,13 @@
 services:
   speedtest-tracker:
     container_name: speedtest-tracker
-    ports:
-      - 8080:80
-      - 8443:443
+    # ports:
+    #  - 8080:80
+    # - 8443:443
     environment:
       - PUID=1000
       - PGID=1000
-      - APP_KEY=base64:+EDGbq8Du6J9OxPDrqTj4GwW7i/DY4OvWFLTKsZbbuY=
+      - APP_KEY=base64:uztryN3qc4bjShtib+zp99xOVD9TPxLE7Bc3q4/kSyk=
       - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
@@ -27,6 +27,22 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tubearchivist.entrypoints=http"
+      - "traefik.http.routers.tubearchivist.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.middlewares.tubearchivist-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.tubearchivist.middlewares=tubearchivist-https-redirect"
+      - "traefik.http.routers.tubearchivist-secure.entrypoints=https"
+      - "traefik.http.routers.tubearchivist-secure.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.routers.tubearchivist-secure.tls=true"
+      - "traefik.http.routers.tubearchivist-secure.service=speedtest-tracker"
+      - "traefik.http.services.tubearchivist.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true     
   db:
     image: mariadb:10
     restart: always
