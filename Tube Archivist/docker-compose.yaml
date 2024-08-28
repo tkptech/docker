@@ -8,7 +8,7 @@ services:
     # ports:
     #  - 8057:8000 # change Port 80 (left side of : ) to free port of your choice
     volumes:
-      - ./media:/youtube
+      - /mnt/media:/youtube
       - ./cache:/cache
     environment:
       - ES_URL=http://archivist-es:9200     # needs protocol e.g. http and port
