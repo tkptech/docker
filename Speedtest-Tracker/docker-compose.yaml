@@ -29,15 +29,15 @@ services:
       - db
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tubearchivist.entrypoints=http"
-      - "traefik.http.routers.tubearchivist.rule=Host(`speedtest.tkp.io.vn`)"
-      - "traefik.http.middlewares.tubearchivist-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.tubearchivist.middlewares=tubearchivist-https-redirect"
-      - "traefik.http.routers.tubearchivist-secure.entrypoints=https"
-      - "traefik.http.routers.tubearchivist-secure.rule=Host(`speedtest.tkp.io.vn`)"
-      - "traefik.http.routers.tubearchivist-secure.tls=true"
-      - "traefik.http.routers.tubearchivist-secure.service=speedtest-tracker"
-      - "traefik.http.services.tubearchivist.loadbalancer.server.port=8080"
+      - "traefik.http.routers.speedtest-tracker.entrypoints=http"
+      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.middlewares.speedtest-tracker-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.speedtest-tracker.middlewares=tubearchivist-https-redirect"
+      - "traefik.http.routers.speedtest-tracker-secure.entrypoints=https"
+      - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.routers.speedtest-tracker-secure.tls=true"
+      - "traefik.http.routers.speedtest-tracker-secure.service=speedtest-tracker"
+      - "traefik.http.services.speedtest-tracker.loadbalancer.server.port=8080"
       - "traefik.docker.network=proxy"
     networks:
       - proxy
