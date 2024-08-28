@@ -28,7 +28,6 @@ services:
       # - WATCHTOWER_MONITOR_ONLY=true
       # you can tell watchtower to do updates and restarts one by one - can be helpful
       - WATCHTOWER_ROLLING_RESTART=true
-
       - WATCHTOWER_NOTIFICATIONS=gotify
       - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.tkp.io.vn
       - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=/run/secrets/access_token
