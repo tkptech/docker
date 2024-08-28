@@ -32,7 +32,7 @@ services:
       - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.tkp.io.vn`)"
       - "traefik.http.routers.speedtest-tracker-secure.tls=true"
       - "traefik.http.routers.speedtest-tracker-secure.service=speedtest-tracker"
-      - "traefik.http.services.speedtest-tracker.loadbalancer.server.port=8080"
+      - "traefik.http.services.speedtest-tracker.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy"
     networks:
       - proxy
