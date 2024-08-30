@@ -17,7 +17,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./radarr:/config
-      - /mnt/media:/data
+      - /mnt/media:/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.entrypoints=http"
@@ -51,7 +51,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./sonarr:/config
-      - /mnt/media:/data
+      - /mnt/media:/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.entrypoints=http"
@@ -66,6 +66,70 @@ services:
       - "traefik.docker.network=proxy"
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
+
+  lidarr:
+    container_name: lidarr
+    image: ghcr.io/hotio/lidarr:latest
+   # ports: # uncomment if not using reverse proxy
+   #    - 8686:8686
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - UNMASK=002
+        - TZ=Asia/Ho_Chi_Minh
+    volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - ./lidarr:/config
+        - /mnt/media:/media
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lidarr.entrypoints=http"
+      - "traefik.http.routers.lidarr.rule=Host(`lidarr.tkp.io.vn`)"
+      - "traefik.http.middlewares.lidarr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.lidarr.middlewares=lidarr-https-redirect"
+      - "traefik.http.routers.lidarr-secure.entrypoints=https"
+      - "traefik.http.routers.lidarr-secure.rule=Host(`lidarr.tkp.io.vn`)"
+      - "traefik.http.routers.lidarr-secure.tls=true"
+      - "traefik.http.routers.lidarr-secure.service=lidarr"
+      - "traefik.http.services.lidarr.loadbalancer.server.port=8686"
+      - "traefik.docker.network=proxy"
+    networks:
+        - proxy
+    security_opt:
+      - no-new-privileges:true
+
+  readarr:
+    container_name: readarr
+    image: ghcr.io/hotio/readarr
+    # ports:
+    # - "8787:8787"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./readarr:/config
+      - /mnt/media:/media
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.readarr.entrypoints=http"
+      - "traefik.http.routers.lidarr.rule=Host(`readarr.tkp.io.vn`)"
+      - "traefik.http.middlewares.readarr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.readarr.middlewares=readarr-https-redirect"
+      - "traefik.http.routers.readarr-secure.entrypoints=https"
+      - "traefik.http.routers.readarr-secure.rule=Host(`readarr.tkp.io.vn`)"
+      - "traefik.http.routers.readarr-secure.tls=true"
+      - "traefik.http.routers.readarr-secure.service=readarr"
+      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
+      - "traefik.docker.network=proxy"
+    networks:
+        - proxy
     security_opt:
       - no-new-privileges:true
 
@@ -116,7 +180,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./bazarr:/config
-      - /mnt/media:/data/media
+      - /mnt/media:/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bazarr.entrypoints=http"
@@ -147,7 +211,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./qbittorrent:/config
-      - /mnt/media:/data
+      - /mnt/media:/media
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -166,67 +230,34 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  lidarr:
-    container_name: lidarr
-    image: ghcr.io/hotio/lidarr:latest
-   # ports: # uncomment if not using reverse proxy
-   #    - 8686:8686
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    # ports:
+    #  - "5055:5055"
     environment:
-        - PUID=1000
-        - PGID=1000
-        - UNMASK=002
-        - TZ=Asia/Ho_Chi_Minh
-    volumes:
-        - /etc/localtime:/etc/localtime:ro
-        - ./lidarr:/config
-        - /mnt/media:/data
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.lidarr.entrypoints=http"
-      - "traefik.http.routers.lidarr.rule=Host(`lidarr.tkp.io.vn`)"
-      - "traefik.http.middlewares.lidarr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.lidarr.middlewares=lidarr-https-redirect"
-      - "traefik.http.routers.lidarr-secure.entrypoints=https"
-      - "traefik.http.routers.lidarr-secure.rule=Host(`lidarr.tkp.io.vn`)"
-      - "traefik.http.routers.lidarr-secure.tls=true"
-      - "traefik.http.routers.lidarr-secure.service=lidarr"
-      - "traefik.http.services.lidarr.loadbalancer.server.port=8686"
-      - "traefik.docker.network=proxy"
-    networks:
-        - proxy
-    security_opt:
-      - no-new-privileges:true
-
-  overseerr:
-    container_name: overseerr
-    image: ghcr.io/hotio/overseerr:latest
-    #ports: # uncomment if not using reverse proxy
-    #  - 5055:5055
-    environment:
-      - LOG_LEVEL=info
       - PUID=1000
       - PGID=1000
       - UMASK=002
       - TZ=Asia/Ho_Chi_Minh
     volumes:
+      - ./jellyseerr:/config
       - /etc/localtime:/etc/localtime:ro
-      - ./overseerr:/config
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.overseerr.entrypoints=http"
-      - "traefik.http.routers.overseerr.rule=Host(`overseerr.tkp.io.vn`)"
-      - "traefik.http.middlewares.overseerr-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.overseerr.middlewares=overseerr-https-redirect"
-      - "traefik.http.routers.overseerr-secure.entrypoints=https"
-      - "traefik.http.routers.overseerr-secure.rule=Host(`overseerr.tkp.io.vn`)"
-      - "traefik.http.routers.overseerr-secure.tls=true"
-      - "traefik.http.routers.overseerr-secure.service=overseerr"
-      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
+      - "traefik.http.routers.jellyseerr.entrypoints=http"
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.tkp.io.vn`)"
+      - "traefik.http.middlewares.jellyseerr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.jellyseerr.middlewares=jellyseerr-https-redirect"
+      - "traefik.http.routers.jellyseerr-secure.entrypoints=https"
+      - "traefik.http.routers.jellyseerr-secure.rule=Host(`jellyseerr.tkp.io.vn`)"
+      - "traefik.http.routers.jellyseerr-secure.tls=true"
+      - "traefik.http.routers.jellyseerr-secure.service=jellyseerr"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
       - "traefik.docker.network=proxy"
     networks:
-        - proxy
+      - proxy
     security_opt:
       - no-new-privileges:true
 
@@ -240,6 +271,18 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     ports:
       - ${PORT:-8191}:8191
+    restart: unless-stopped
+    networks:
+      - proxy
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    user: 1000:1000
+    container_name: recyclarr
+    volumes:
+      - ./recyclarr:/config
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
     restart: unless-stopped
     networks:
       - proxy
