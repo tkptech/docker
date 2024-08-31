@@ -11,10 +11,7 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - /home/ubuntu/YOUR_NAS/Films:/Films:ro
-      - /home/ubuntu/YOUR_NAS/TVShows:/TVShows:ro
-      - /home/ubuntu/YOUR_NAS/Audiobooks:/Audiobooks:ro
-      - /home/ubuntu/YOUR_NAS/Music:/Music:ro
+      - /mnt/media:/media
     #ports: You will need to uncomment if you aren't running through a proxy
     #  - 8096:8096
     #  - 8920:8920 #optional
