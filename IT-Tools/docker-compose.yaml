@@ -8,15 +8,15 @@ services:
     restart: always
     label:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.entrypoints=http"
-      - "traefik.http.routers.jellyfin.rule=Host(`it-tools.tkp.io.vn`)"
-      - "traefik.http.middlewares.jellyfin-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.jellyfin.middlewares=jellyfin-https-redirect"
-      - "traefik.http.routers.jellyfin-secure.entrypoints=https"
-      - "traefik.http.routers.jellyfin-secure.rule=Host(`it-tools.tkp.io.vn`)"
-      - "traefik.http.routers.jellyfin-secure.tls=true"
-      - "traefik.http.routers.jellyfin-secure.service=it-tools"
-      - "traefik.http.services.jellyfin.loadbalancer.server.port=8085"
+      - "traefik.http.routers.it-tools.entrypoints=http"
+      - "traefik.http.routers.it-tools.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.middlewares.it-tools-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.it-tools.middlewares=it-tools-https-redirect"
+      - "traefik.http.routers.it-tools-secure.entrypoints=https"
+      - "traefik.http.routers.it-tools-secure.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.routers.it-tools-secure.tls=true"
+      - "traefik.http.routers.it-tools-secure.service=it-tools"
+      - "traefik.http.services.it-tools.loadbalancer.server.port=8085"
       - "traefik.docker.network=proxy"
     networks:
       proxy:
