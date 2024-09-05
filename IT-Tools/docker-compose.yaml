@@ -3,8 +3,8 @@ services:
   it-tools:
     image: corentinth/it-tools:latest
     container_name: IT-Tools
-    ports:
-      - 8085:80
+  # ports:
+  #   - 8085:80
     restart: always
     label:
       - "traefik.enable=true"
@@ -16,7 +16,7 @@ services:
       - "traefik.http.routers.it-tools-secure.rule=Host(`it-tools.tkp.io.vn`)"
       - "traefik.http.routers.it-tools-secure.tls=true"
       - "traefik.http.routers.it-tools-secure.service=it-tools"
-      - "traefik.http.services.it-tools.loadbalancer.server.port=8085"
+      - "traefik.http.services.it-tools.loadbalancer.server.port=80"
       - "traefik.docker.network=proxy"
     networks:
       proxy:
