@@ -2,10 +2,10 @@ version: '3'
 
 services:
   wp:
-    image: wordpress:latest # https://hub.docker.com/_/wordpress/
+    image: wordpress:latest          # https://hub.docker.com/_/wordpress/
     volumes:
-      - /home/ubuntu/docker/wordpress/config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
-      - /home/ubuntu/docker/wordpress/wp-app:/var/www/html # Full wordpress project
+      - ./wordpress/config/php.conf.ini:/usr/local/etc/php/conf.d/conf.ini
+      - ./wordpress/wp-app:/var/www/html # Full wordpress project
       #- ./plugin-name/trunk/:/var/www/html/wp-content/plugins/plugin-name # Plugin development
       #- ./theme-name/trunk/:/var/www/html/wp-content/themes/theme-name # Theme development
     environment:
@@ -23,11 +23,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wordpress.entrypoints=http"
-      - "traefik.http.routers.wordpress.rule=Host(`wordpress.your-domain.co.uk`)"
+      - "traefik.http.routers.wordpress.rule=Host(`wordpress.domain.io.vn`)"
       - "traefik.http.middlewares.wordpress-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.wordpress.middlewares=wordpress-https-redirect"
       - "traefik.http.routers.wordpress-secure.entrypoints=https"
-      - "traefik.http.routers.wordpress-secure.rule=Host(`wordpress.your-domain.co.uk`)"
+      - "traefik.http.routers.wordpress-secure.rule=Host(`wordpress.domain.io.vn`)"
       - "traefik.http.routers.wordpress-secure.tls=true"
       - "traefik.http.routers.wordpress-secure.service=wordpress"
       - "traefik.http.services.wordpress.loadbalancer.server.port=80"
@@ -49,11 +49,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pma.entrypoints=http"
-      - "traefik.http.routers.pma.rule=Host(`pma.your-domain.co.uk`)"
+      - "traefik.http.routers.pma.rule=Host(`pma.domain.io.vn`)"
       - "traefik.http.middlewares.pma-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.pma.middlewares=pma-https-redirect"
       - "traefik.http.routers.pma-secure.entrypoints=https"
-      - "traefik.http.routers.pma-secure.rule=Host(`pma.your-domain.co.uk`)"
+      - "traefik.http.routers.pma-secure.rule=Host(`pma.domain.io.vn`)"
       - "traefik.http.routers.pma-secure.tls=true"
       - "traefik.http.routers.pma-secure.service=pma"
       - "traefik.http.services.pma.loadbalancer.server.port=80"
@@ -69,8 +69,8 @@ services:
         '--collation-server=utf8mb4_unicode_ci'
     ]
     volumes:
-      - /home/ubuntu/docker/wordpress/wp-data:/docker-entrypoint-initdb.d
-      - /home/ubuntu/docker/wordpress/db_data:/var/lib/mysql
+      - ./wordpress/wp-data:/docker-entrypoint-initdb.d
+      - ./docker/wordpress/db_data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
