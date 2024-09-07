@@ -23,7 +23,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.tkp.io.vn`)"                      # Change DOMAIN_NAME to yours
+      - "traefik.http.routers.traefik.rule=Host(`traefik.domain.io.vn`)"                      # Change DOMAIN_NAME to yours
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:####HASHED_PASSWORD#####"   # Change HASHED_PASSWORD, and username=admin
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
@@ -33,8 +33,8 @@ services:
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=tkp.io.vn"                # Change DOMAIN_NAME to yours
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.tkp.io.vn"              # Change DOMAIN_NAME to yours
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=domain.io.vn"                # Change DOMAIN_NAME to yours
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.domain.io.vn"              # Change DOMAIN_NAME to yours
       - "traefik.http.routers.traefik-secure.service=api@internal"
 
 networks:
