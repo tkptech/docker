@@ -25,11 +25,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.speedtest-tracker.entrypoints=http"
-      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.domain.io.vn`)"
       - "traefik.http.middlewares.speedtest-tracker-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.speedtest-tracker.middlewares=tubearchivist-https-redirect"
       - "traefik.http.routers.speedtest-tracker-secure.entrypoints=https"
-      - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.tkp.io.vn`)"
+      - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.domain.io.vn`)"
       - "traefik.http.routers.speedtest-tracker-secure.tls=true"
       - "traefik.http.routers.speedtest-tracker-secure.service=speedtest-tracker"
       - "traefik.http.services.speedtest-tracker.loadbalancer.server.port=80"
