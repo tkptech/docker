@@ -1,0 +1,32 @@
+version: "3"
+services:
+  stirling-pdf:
+    image: frooodle/s-pdf
+    container_name: stirling-pdf
+    volumes:
+      - ./trainingData:/usr/share/tessdata #Required for extra OCR languages
+      - ./extraConfigs:/configs
+#     - ./customFiles:/customFiles/
+#     - ./logs:/logs/
+#    ports:
+#      - '8080:8080'
+    environment:
+      - LANGS=vn_VN
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.stirling.entrypoints=http"
+      - "traefik.http.routers.stirling.rule=Host(`stirling.domain.io.vn`)"
+      - "traefik.http.middlewares.stirling-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.stirling.middlewares=stirling-https-redirect"
+      - "traefik.http.routers.stirling-secure.entrypoints=https"
+      - "traefik.http.routers.stirling-secure.rule=Host(`stirling.domain.io.vn`)"
+      - "traefik.http.routers.stirling-secure.tls=true"
+      - "traefik.http.routers.stirling-secure.service=stirling"
+      - "traefik.http.services.stirling.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
