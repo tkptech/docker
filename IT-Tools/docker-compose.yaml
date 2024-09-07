@@ -2,18 +2,18 @@ version: "3.9"
 services:
   it-tools:
     image: corentinth/it-tools:latest
-    container_name: IT-Tools
-  # ports:
-  #   - 8085:80
+    container_name: it-tools
+   # ports:
+   #   - 8085:80
     restart: always
-    label:
+    labels:
       - "traefik.enable=true"
       - "traefik.http.routers.it-tools.entrypoints=http"
-      - "traefik.http.routers.it-tools.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.routers.it-tools.rule=Host(`it-tools.domain.io.vn`)"
       - "traefik.http.middlewares.it-tools-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.it-tools.middlewares=it-tools-https-redirect"
       - "traefik.http.routers.it-tools-secure.entrypoints=https"
-      - "traefik.http.routers.it-tools-secure.rule=Host(`it-tools.tkp.io.vn`)"
+      - "traefik.http.routers.it-tools-secure.rule=Host(`it-tools.domain.io.vn`)"
       - "traefik.http.routers.it-tools-secure.tls=true"
       - "traefik.http.routers.it-tools-secure.service=it-tools"
       - "traefik.http.services.it-tools.loadbalancer.server.port=80"
@@ -22,6 +22,7 @@ services:
       proxy:
     security_opt:
       - no-new-privileges:true
+
 networks:
   proxy:
     external: true
