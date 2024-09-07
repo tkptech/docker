@@ -12,11 +12,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nginx.entrypoints=http"
-      - "traefik.http.routers.nginx.rule=Host(`my.website.com`)"
+      - "traefik.http.routers.nginx.rule=Host(`domain.io.vn`)"
       - "traefik.http.middlewares.nginx-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.nginx.middlewares=nginx-https-redirect"
       - "traefik.http.routers.nginx-secure.entrypoints=https"
-      - "traefik.http.routers.nginx-secure.rule=Host(`my.website.com`)"
+      - "traefik.http.routers.nginx-secure.rule=Host(`domain.io.vn`)"
       - "traefik.http.routers.nginx-secure.tls=true"
       - "traefik.http.routers.nginx-secure.service=nginx"
       - "traefik.http.services.nginx.loadbalancer.server.port=80"
