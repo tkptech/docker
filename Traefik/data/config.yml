@@ -4,28 +4,46 @@ http:
     proxmox:
       entryPoints:
         - "https"
-      rule: "Host(`pve.domain.io.vn`)"        # Change DOMAIN_NAME to yours
+      rule: "Host(`pve.tkp.io.vn`)"
       middlewares:
         - default-headers
-        - https-redirect
+        - https-redirectscheme
       tls: {}
       service: proxmox
+    
+    synology:
+      entryPoints:
+        - "https"
+      rule: "Host(`dsm.tkp.io.vn`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+     #   certResolver: http
+      service: synology
 
+#endregion
 #region services
-
   services:
     proxmox:
       loadBalancer:
         servers:
-          - url: "https://24.4.5.2:8006"            # Change IP Address to your proxmox instance
+          - url: "https://24.4.5.2:8006"
         passHostHeader: true
-
+        
+    synology:
+      loadBalancer:
+        servers:
+          - url: "https://24.4.5.4:5001"
+        passHostHeader: true
+        
+#endregion
   middlewares:
-    https-redirect:
+    https-redirectscheme:
       redirectScheme:
         scheme: https
         permanent: true
-
+        
     default-headers:
       headers:
         frameDeny: true
@@ -40,10 +58,10 @@ http:
           X-Forwarded-Proto: https
 
     default-whitelist:
-      ipWhiteList:
+      ipAllowList:
         sourceRange:
         - "10.0.0.0/8"
-        - "24.4.5.2/16"
+        - "24.4.5.0/16"
         - "172.16.0.0/12"
 
     secured:
@@ -51,3 +69,5 @@ http:
         middlewares:
         - default-whitelist
         - default-headers
+
+
