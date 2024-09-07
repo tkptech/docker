@@ -4,7 +4,7 @@ http:
     proxmox:
       entryPoints:
         - "https"
-      rule: "Host(`pve.tkp.io.vn`)"        # Change DOMAIN_NAME to yours
+      rule: "Host(`pve.domain.io.vn`)"        # Change DOMAIN_NAME to yours
       middlewares:
         - default-headers
         - https-redirect
