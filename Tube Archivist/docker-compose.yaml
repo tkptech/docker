@@ -15,7 +15,7 @@ services:
       - REDIS_HOST=archivist-redis          # don't add protocol
       - HOST_UID=1000
       - HOST_GID=1000
-      - TA_HOST=tubearchivist.tkp.io.vn       # set your host name
+      - TA_HOST=tubearchivist.domain.io.vn       # set your host name
       - TA_USERNAME=admin                     # your initial TA credentials
       - TA_PASSWORD=password                  # your initial TA credentials
       - ELASTIC_PASSWORD=yourpassword         # set password for Elasticsearch
@@ -26,11 +26,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.tubearchivist.entrypoints=http"
-      - "traefik.http.routers.tubearchivist.rule=Host(`tubearchivist.tkp.io.vn`)"
+      - "traefik.http.routers.tubearchivist.rule=Host(`tubearchivist.domain.io.vn`)"
       - "traefik.http.middlewares.tubearchivist-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.tubearchivist.middlewares=tubearchivist-https-redirect"
       - "traefik.http.routers.tubearchivist-secure.entrypoints=https"
-      - "traefik.http.routers.tubearchivist-secure.rule=Host(`tubearchivist.tkp.io.vn`)"
+      - "traefik.http.routers.tubearchivist-secure.rule=Host(`tubearchivist.domain.io.vn`)"
       - "traefik.http.routers.tubearchivist-secure.tls=true"
       - "traefik.http.routers.tubearchivist-secure.service=tubearchivist"
       - "traefik.http.services.tubearchivist.loadbalancer.server.port=8000"
