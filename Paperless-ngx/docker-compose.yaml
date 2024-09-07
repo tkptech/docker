@@ -87,11 +87,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.entrypoints=http"
-      - "traefik.http.routers.paperless.rule=Host(`paperless.jimsgarage.co.uk`)"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.domain.io.vn`)"
       - "traefik.http.middlewares.paperless-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.paperless.middlewares=paperless-https-redirect"
       - "traefik.http.routers.paperless-secure.entrypoints=https"
-      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.jimsgarage.co.uk`)"
+      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.domain.io.vn`)"
       - "traefik.http.routers.paperless-secure.tls=true"
       - "traefik.http.routers.paperless-secure.tls.certresolver=cloudflare" # change this to your cert resolver
       - "traefik.http.routers.paperless-secure.service=paperless" 
