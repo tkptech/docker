@@ -9,7 +9,7 @@ services:
       - no-new-privileges:true
     restart: unless-stopped
     networks:
-      - proxy:
+      - proxy
   #  environment:
       #- ADMIN_TOKEN=$$argon2id$$v=19$$m=65540,t=3,p=4$$ibZ3NMLJKTT4LKQzO7JOB8$$YVLPIdIyBGPjM2wHghjz4BkAvfnG+KM
     labels:
