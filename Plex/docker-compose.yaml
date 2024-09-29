@@ -24,9 +24,9 @@ services:
             - 32414:32414/udp
         environment:
             - TZ=Asia/Ho_Chi_Minh
-            - PLEX_CLAIM=claim-         # get this from plex.tv/claim
-            - ADVERTISE_IP=https://plex.yourdomain.com:443 #change me
-            - ALLOWED_NETWORKS=192.168.0.0/16 # place trusted network ranges here
+            - PLEX_CLAIM=claim-                      # get this from plex.tv/claim
+            - ADVERTISE_IP=https://plex.domain.io.vn #change me
+            - ALLOWED_NETWORKS=24.4.5.0/16           # place trusted network ranges here
         networks:
           proxy:
         labels:
