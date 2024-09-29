@@ -1,0 +1,35 @@
+version: "3"
+services:
+  cups:
+    image: ghcr.io/anujdatar/cups
+    container_name: cups
+    restart: unless-stopped
+    ports:
+      - "631:631"
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      - CUPSADMIN=print
+      - CUPSPASSWORD=print_password
+      - TZ="Asia/Ho_Chi_Minh"
+    volumes:
+      - ./:/etc/cups
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cups.entrypoints=http"
+      - "traefik.http.routers.cups.rule=Host(`cups.domain.io.vn`)"
+      - "traefik.http.routers.cups.middlewares=default-whitelist@file"
+      - "traefik.http.middlewares.cups-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.cups.middlewares=cups-https-redirect"
+      - "traefik.http.routers.cups-secure.entrypoints=https"
+      - "traefik.http.routers.cups-secure.rule=Host(`cups.domain.io.vn`)"
+      - "traefik.http.routers.cups-secure.tls=true"
+      - "traefik.http.routers.cups-secure.service=cups"
+      - "traefik.http.services.cups.loadbalancer.server.port=631"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
