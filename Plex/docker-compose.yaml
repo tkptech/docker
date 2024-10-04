@@ -44,6 +44,67 @@ services:
           - "traefik.docker.network=proxy"
         security_opt:
           - no-new-privileges:true
+          
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: overseerr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+  # ports:
+  #   - 5055:5055
+    volumes:
+      - ./config:/config
+      - /mnt/media:/media
+    networks:
+      proxy:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.overseerr.entrypoints=http"
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.domain.io.vn`)" # change me
+      - "traefik.http.middlewares.overseerr-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.overseerr.middlewares=overseerr-https-redirect"
+      - "traefik.http.routers.overseerr-secure.entrypoints=https"
+      - "traefik.http.routers.overseerr-secure.rule=Host(`overseerr.domain.io.vn`)" #change me
+      - "traefik.http.routers.overseerr-secure.tls=true"
+      - "traefik.http.routers.overseerr-secure.service=overseerr"
+      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
+      - "traefik.http.services.overseerr.loadbalancer.server.scheme=https"
+      - "traefik.docker.network=proxy"
+    security_opt:
+      - no-new-privileges:true
+
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ./:/config
+ #  ports:
+ #    - 8181:8181
+    networks:
+      proxy:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tautulli.entrypoints=http"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.domain.io.vn`)" # change me
+      - "traefik.http.middlewares.tautulli-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.tautulli.middlewares=tautulli-https-redirect"
+      - "traefik.http.routers.tautulli-secure.entrypoints=https"
+      - "traefik.http.routers.tautulli-secure.rule=Host(`tautulli.domain.io.vn`)" #change me
+      - "traefik.http.routers.tautulli-secure.tls=true"
+      - "traefik.http.routers.tautulli-secure.service=tautulli"
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+      - "traefik.http.services.tautulli.loadbalancer.server.scheme=https"
+      - "traefik.docker.network=proxy"
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   proxy:
