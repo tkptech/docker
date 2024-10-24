@@ -10,7 +10,7 @@ services:
       - APP_KEY=base64:uztryN3qc4bjShtib+zp99xOVD9TPxLE7Bc3q4/kSyk=
       - DB_CONNECTION=sqlite
       - SPEEDTEST_SCHEDULE=5 * * * *
-      - SPEEDTEST_SERVERS=54812
+      - SPEEDTEST_SERVERS=17758
       - PRUNE_RESULTS_OLDER_THAN=
       - CHART_DATETIME_FORMAT=
       - DATETIME_FORMAT=
