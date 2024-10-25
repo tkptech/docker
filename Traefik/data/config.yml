@@ -28,13 +28,13 @@ http:
     proxmox:
       loadBalancer:
         servers:
-          - url: "https://24.4.5.2:8006"
+          - url: "https://192.168.1.100:8006"
         passHostHeader: true
         
     synology:
       loadBalancer:
         servers:
-          - url: "https://24.4.5.4:5001"
+          - url: "https://192.168.1.101:5001"
         passHostHeader: true
         
 #endregion
