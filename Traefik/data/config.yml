@@ -25,7 +25,7 @@ http:
     nas:
       entryPoints:
         - "https"
-      rule: "Host(`nas.tkp.io.vn`)"
+      rule: "Host(`dsm.tkp.io.vn`)"
       middlewares:
         - default-headers
         - https-redirectscheme
