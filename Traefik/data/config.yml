@@ -11,16 +11,27 @@ http:
       tls: {}
       service: proxmox
     
-    synology:
+    surveillance:
       entryPoints:
         - "https"
-      rule: "Host(`dsm.tkp.io.vn`)"
+      rule: "Host(`svlc.tkp.io.vn`)"
       middlewares:
         - default-headers
         - https-redirectscheme
       tls: {}
      #   certResolver: http
-      service: synology
+      service: surveillance
+
+    nas:
+      entryPoints:
+        - "https"
+      rule: "Host(`nas.tkp.io.vn`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+     #   certResolver: http
+      service: surveillance
 
 #endregion
 #region services
@@ -31,10 +42,16 @@ http:
           - url: "https://192.168.1.100:8006"
         passHostHeader: true
         
-    synology:
+    surveillance:
       loadBalancer:
         servers:
           - url: "https://192.168.1.101:5001"
+        passHostHeader: true
+        
+    nas:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.1.102:5001"
         passHostHeader: true
         
 #endregion
