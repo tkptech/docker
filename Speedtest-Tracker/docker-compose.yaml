@@ -7,29 +7,27 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - APP_KEY=base64:uztryN3qc4bjShtib+zp99xOVD9TPxLE7Bc3q4/kSyk=
+      - APP_KEY=base64:9cp8PvhXJM6bqWgnFRB1OWasdLhPzFS2Cy0vq/w7Cdo=
       - DB_CONNECTION=sqlite
       - SPEEDTEST_SCHEDULE=5 * * * *
       - SPEEDTEST_SERVERS=17758
-      - PRUNE_RESULTS_OLDER_THAN=
-      - CHART_DATETIME_FORMAT=
-      - DATETIME_FORMAT=
-      - APP_TIMEZONE=
+      - PRUNE_RESULTS_OLDER_THAN=7
+      - CHART_DATETIME_FORMAT=dd:mm:yy
+      - DATETIME_FORMAT=dd:mm:yy
+      - APP_TIMEZONE=Asia/Ho_Chi_Minh
     volumes:
       - ./data:/config
       - ./to-custom-ssl-keys:/config/keys
     image: lscr.io/linuxserver/speedtest-tracker:latest
     restart: unless-stopped
-    depends_on:
-      - db
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.speedtest-tracker.entrypoints=http"
-      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.domain.io.vn`)"
+      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest.tkp.io.vn`)"
       - "traefik.http.middlewares.speedtest-tracker-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.speedtest-tracker.middlewares=tubearchivist-https-redirect"
       - "traefik.http.routers.speedtest-tracker-secure.entrypoints=https"
-      - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.domain.io.vn`)"
+      - "traefik.http.routers.speedtest-tracker-secure.rule=Host(`speedtest.tkp.io.vn`)"
       - "traefik.http.routers.speedtest-tracker-secure.tls=true"
       - "traefik.http.routers.speedtest-tracker-secure.service=speedtest-tracker"
       - "traefik.http.services.speedtest-tracker.loadbalancer.server.port=80"
@@ -37,7 +35,7 @@ services:
     networks:
       - proxy
     security_opt:
-      - no-new-privileges:true     
+      - no-new-privileges:true
 networks:
   proxy:
     external: true
