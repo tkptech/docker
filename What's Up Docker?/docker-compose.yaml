@@ -1,5 +1,4 @@
 version: '3'
-
 services:
   whatsupdocker:
     image: fmartinou/whats-up-docker
@@ -11,7 +10,7 @@ services:
   #   - 3000:3000
     environment:
       - WUD_WATCHER_LOCAL_WATCHALL=true
-      - WUD_WATCHER_MYREMOTEHOST_HOST=24.4.5.3
+      - WUD_WATCHER_MYREMOTEHOST_HOST=192.168.1.103, 192.168.1.106
     networks:
        proxy:
     labels:
