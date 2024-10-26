@@ -4,8 +4,8 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     environment:
-      PUID: 1000
-      PGID: 1000
+      - PUID: 1000
+      - PGID: 1000
     # uncomment if you are not using a reverse proxy
     #ports:
     #  - 3000:3000
