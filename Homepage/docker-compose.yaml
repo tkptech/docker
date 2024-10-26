@@ -3,8 +3,9 @@ services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
-    # uncomment if you do not want to run as root
-    #user: 1000:1000
+    environment:
+      PUID: 1000
+      PGID: 1000
     # uncomment if you are not using a reverse proxy
     #ports:
     #  - 3000:3000
