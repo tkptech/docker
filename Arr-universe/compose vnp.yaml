@@ -18,7 +18,7 @@ services:
       - 6881:6881 # qbittorrent torrent port
       - 9696:9696 # prowlarr
     volumes:
-      - /docker/gluetun:/gluetun
+      - ./gluetun:/gluetun
     environment:
       - VPN_SERVICE_PROVIDER=surfshark
       - VPN_TYPE=wireguard
@@ -45,7 +45,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      
+
 # Healthcheck was added to work with deunhealth to restart container
 # on unhealthy status. labels allows deunhealth to monitor.
   qbittorrent:
@@ -109,7 +109,7 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /docker/radarr:/config
+      - ./radarr:/config
       - /mnt/media:/media
     ports:
       - 7878:7878
@@ -120,7 +120,7 @@ services:
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /docker/lidarr:/config
+      - ./lidarr:/config
       - /mnt/media:/media
     environment:
      - PUID=1000
@@ -128,7 +128,7 @@ services:
      - TZ=Asia/Ho_Chi_Minh
     ports:
       - 8686:8686
-  
+
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
@@ -168,15 +168,3 @@ services:
     environment:
       - TZ=Asia/Ho_Chi_Minh
     restart: unless-stopped
-
-
-
-
-
-
-
-
-
-
-
-
