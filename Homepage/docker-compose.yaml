@@ -13,7 +13,11 @@ services:
       - ./config:/app/config
       - ./image:/app/public/images
       - ./icons:/app/public/icons
+      - ./exported:/app/pulic/exported
       - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/cache:/cache
+      - /mnt/synology:/synology
+      - /mnt/suveillance:/suveillance
     networks:
       proxy:
     labels:
