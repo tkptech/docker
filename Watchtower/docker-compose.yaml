@@ -18,7 +18,7 @@ services:
       - WATCHTOWER_HTTP_API_TOKEN=mytoken
       - WATCHTOWER_HTTP_API_METRICS=true
       - WATCHTOWER_NOTIFICATIONS=gotify
-      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.domain.io.vn
+      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.tkp.io.vn
       - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=/run/secrets/access_token
       # - WATCHTOWER_DISABLE_CONTAINERS=traefik crowdsec bouncer-traefik deconz frigate home-assistant homeassistant-db              # the below will ignore labels set. It is worth checking out labels as that can be a more scalabe solution (automatic)
       # - DOCKER_HOST=tcp://hostname:port              # the docker host can also be remote by specifying tcp     
@@ -27,11 +27,11 @@ services:
       # - WATCHTOWER_INCLUDE_STOPPED=true              # choose whether to update stopped and exited containers    
       # - WATCHTOWER_REVIVE_STOPPED=true               # this will start containers that were stopped or exited if they are updated  
       # - WATCHTOWER_MONITOR_ONLY=true                 # watchtower can behave like DIUN by only notifying, and not updating
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - /root/.docker/config.json:/config.json - Enable this when using a custom repo     
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
     ports:
       - 8080:8080
     command: --debug --http-api-update                 # change this interval to whatever suits you
