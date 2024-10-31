@@ -18,7 +18,7 @@ services:
       - WATCHTOWER_HTTP_API_TOKEN=mytoken
       - WATCHTOWER_HTTP_API_METRICS=true
       - WATCHTOWER_NOTIFICATIONS=gotify
-      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.tkp.io.vn
+      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.domain.io.vn
       - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=/run/secrets/access_token
       # - WATCHTOWER_DISABLE_CONTAINERS=traefik crowdsec bouncer-traefik deconz frigate home-assistant homeassistant-db              # the below will ignore labels set. It is worth checking out labels as that can be a more scalabe solution (automatic)
       # - DOCKER_HOST=tcp://hostname:port              # the docker host can also be remote by specifying tcp     
