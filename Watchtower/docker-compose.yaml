@@ -30,11 +30,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - /root/.docker/config.json:/config.json - Enable this when using a custom repo     
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     ports:
-      - 1234:8080
+      - 8080:8080
     command: --debug --http-api-update                 # change this interval to whatever suits you
     networks:
-      - docker
+      - local
 networks:
-  docker:
+  local:
     external: true
