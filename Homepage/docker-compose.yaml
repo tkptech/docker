@@ -4,31 +4,32 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     environment:
-      - PUID: 1000
-      - PGID: 1000
-    # uncomment if you are not using a reverse proxy
-    #ports:
-    #  - 3000:3000
+      PUID: $PUID
+      PGID: $PGID
+    restart: unless-stopped
+  # ports:
+  #   - 3000:3000
+    env_file: .env
     volumes:
       - ./config:/app/config
-      - ./image:/app/public/images
+      - ./images:/app/public/images
       - ./icons:/app/public/icons
-      - ./exported:/app/pulic/exported
+      - ./exported:/app/public/static
       - /var/run/docker.sock:/var/run/docker.sock
-      - /mnt/cache:/cache
-      - /mnt/synology:/synology
-      - /mnt/suveillance:/suveillance
+      - /mnt/media:/media
+      - /mnt/nas:/nas
+      - /mnt/survelliance:/surveillance
     networks:
       proxy:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homepage.entrypoints=http"
-      - "traefik.http.routers.homepage.rule=Host(`home.domain.io.vn`)"
+      - "traefik.http.routers.homepage.rule=Host(`home.tkp.io.vn`)"
       - "traefik.http.routers.homepage.middlewares=default-whitelist@file"
       - "traefik.http.middlewares.homepage-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.homepage.middlewares=homepage-https-redirect"
       - "traefik.http.routers.homepage-secure.entrypoints=https"
-      - "traefik.http.routers.homepage-secure.rule=Host(`home.domain.io.vn`)"
+      - "traefik.http.routers.homepage-secure.rule=Host(`home.tkp.io.vn`)"
       - "traefik.http.routers.homepage-secure.tls=true"
       - "traefik.http.routers.homepage-secure.service=homepage"
       - "traefik.http.services.homepage.loadbalancer.server.port=3000"
