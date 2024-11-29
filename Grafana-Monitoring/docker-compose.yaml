@@ -1,4 +1,4 @@
-services: 
+services:
   #loki:
   #  container_name: loki
   #  image: grafana/loki:main
@@ -10,7 +10,7 @@ services:
   #    - "3100:3100"
   #  restart: unless-stopped
   #  command: -config.file=/etc/loki/loki-config.yml
-  
+
   #promtail:
   #  container_name: promtail
   #  image: grafana/promtail:main
@@ -23,7 +23,7 @@ services:
   #    - "1514:1514" # this is only needed if you are going to send syslogs
   #  restart: unless-stopped
   #  command: -config.file=/etc/promtail/promtail-config.yml
-  
+
   grafana:
     container_name: grafana
     image: grafana/grafana
@@ -38,24 +38,24 @@ services:
       - influxdb
     environment:
       - GF_SECURITY_ADMIN_USER=voquyen84
-      - GF_SECURITY_ADMIN_PASSWORD=adminadminadminadminadmin
+      - GF_SECURITY_ADMIN_PASSWORD=quyenvo@0904
       - GF_INSTALL_PLUGINS= #grafana-worldmap-panel
 #    links:
 #      - influxdb
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.grafana.entrypoints=http"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.domain.io.vn`)"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.tkp.io.vn`)"
       #- "traefik.http.routers.grafana.middlewares=default-ipAllowList@file"
       - "traefik.http.middlewares.grafana-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.grafana.middlewares=grafana-https-redirect"
       - "traefik.http.routers.grafana-secure.entrypoints=https"
-      - "traefik.http.routers.grafana-secure.rule=Host(`grafana.domain.io.vn`)"
+      - "traefik.http.routers.grafana-secure.rule=Host(`grafana.tkp.io.vn`)"
       - "traefik.http.routers.grafana-secure.tls=true"
       - "traefik.http.routers.grafana-secure.service=grafana"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "traefik.docker.network=proxy"
-  
+
   influxdb:
     container_name: influxdb
     image: influxdb:latest
@@ -65,16 +65,16 @@ services:
       - 8089:8089/udp
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_BUCKET=proxmox
+      - DOCKER_INFLUXDB_INIT_BUCKET=homelab
       - DOCKER_INFLUXDB_INIT_USERNAME=voquyen84
-      - DOCKER_INFLUXDB_INIT_PASSWORD=adminadmin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=quyenvo@0904
       - DOCKER_INFLUXDB_INIT_ORG=tkp
       - TZ=Asia/Ho_Chi_Minh
     networks:
       - grafana
     volumes:
       - ./influxdb:/var/lib/influxdb2
-  
+
   telegraf:
     container_name: telegraf
     image: telegraf
@@ -87,7 +87,7 @@ services:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /:/hostfs:ro # to monitor docker-vm
       - /var/run/docker.sock:/var/run/docker.sock # to monitor docker containers
-      #- '/home/stilicho/docker/grafana/telegraf/mibs:/usr/share/snmp/mibs' # mibs files
+      #- .telegraf/mibs:/usr/share/snmp/mibs' # mibs files
     ports:
       - 8125:8125
     depends_on:
@@ -101,7 +101,7 @@ services:
         - HOST_VAR=/hostfs/var
         - HOST_RUN=/hostfs/run
         - HOST_MOUNT_PREFIX=/hostfs
-    
+
   #graphite:
   #  image: graphiteapp/graphite-statsd
   #  container_name: graphite
@@ -118,7 +118,7 @@ services:
   #    - ./graphite/statsd_config:/opt/statsd/config
   #  networks:
   #    - grafana
-  
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -129,6 +129,27 @@ services:
       - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - grafana
+
+  snmp-exporter:
+    image: prom/snmp-exporter:latest
+    command:
+      - '--config.file=/etc/snmp_exporter/snmp.yml'
+    container_name: snmp_exporter
+    hostname: snmp
+    networks:
+      - grafana
+    mem_limit: 256m
+    mem_reservation: 64m
+    cpu_shares: 512
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    user: 1000:1000
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:9116/ || exit 1
+    volumes:
+      - ./snmp/snmp.yml:/etc/snmp_exporter/snmp.yml:ro
+    restart: unless-stopped
 
  # MongoDB: https://hub.docker.com/_/mongo/
   #mongodb:
@@ -211,12 +232,12 @@ services:
   #    - ./graylog/graylog_data:/usr/share/graylog/data/data"
   #    - ./graylog/graylog_config:/usr/share/graylog/data/config"
   #    - ./graylog/graylog_journal:/usr/share/graylog/data/journal"
-   
+
   #elasticsearch:
   #  container_name: elasticsearch
   #  image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2 (версия старая и вообще они от нас закрылись cloudfront-ом)
   #  volumes:
-  #    - ./elasticsearch/es_data:/usr/share/elasticsearch/data
+  #    - ./grafana/elasticsearch/es_data:/usr/share/elasticsearch/data
   #  environment:
   #    - TZ=Asia/Ho_Chi_Minh
   #    - http.host=0.0.0.0
