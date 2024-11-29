@@ -9,11 +9,16 @@ services:
     #ports:
     #  - "8080:8080"
     environment:
-      DOZZLE_LEVEL: info
-      DOZZLE_TAILSIZE: 300
-      DOZZLE_FILTER: "status=running"
-      # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
-      # DOCKER_HOST: tcp://socket-proxy:2375 # enable when using socket proxy
+      - TZ=Asia/Ho_Chi_Minh
+      - DOZZLE_ENABLE_ACTIONS=true
+      - DOZZLE_NO_ANALYTICS=true
+      - DOZZLE_REMOTE_HOST=tcp://192.168.1.103:2375,tcp://192.168.1.106:2375,tcp://192.168.1.107:2375
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # disable when using socket proxy
     security_opt:
@@ -21,11 +26,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dozzle.entrypoints=http"
-      - "traefik.http.routers.dozzle.rule=Host(`dozzle.domain.io.vn`)"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.tkp.io.vn`)"
       - "traefik.http.middlewares.dozzle-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.dozzle.middlewares=dozzle-https-redirect"
       - "traefik.http.routers.dozzle-secure.entrypoints=https"
-      - "traefik.http.routers.dozzle-secure.rule=Host(`dozzle.domain.io.vn`)"
+      - "traefik.http.routers.dozzle-secure.rule=Host(`dozzle.tkp.io.vn`)"
       - "traefik.http.routers.dozzle-secure.tls=true"
       - "traefik.http.routers.dozzle-secure.service=dozzle"
       - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
