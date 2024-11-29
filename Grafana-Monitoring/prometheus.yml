@@ -7,7 +7,7 @@ global:
   target_limit: 30
   label_limit: 30
   label_name_length_limit: 200
-  label_value_length_limit: 200
+  label_value_length_limit: 300
   # scrape_timeout is set to the global default (10s).
 
 scrape_configs:
@@ -15,6 +15,30 @@ scrape_configs:
 #    static_configs:
 #      - targets: ["ip:6060"]
 
-  - job_name: 'traefik'
+#  - job_name: 'traefik'
+#    static_configs:
+#      - targets: ['192.168.1.104']
+
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ['ip:8080']     
+      - targets: ['localhost:9090']
+      
+  - job_name: 'snmp_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['192.168.1.101']
+      - targets: ['192.168.1.102']
+    metrics_path: /snmp
+    params:
+      module: [synology]
+      auth: [public_v3]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - source_labels: [__param_target]
+        regex: (.*)
+        replacement: snmp_exporter:9116
+        target_label: __address__
+
