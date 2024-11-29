@@ -1,8 +1,8 @@
 ---
-version: "3.4"
+
 services:
   postgresql:
-    image: docker.io/library/postgres:12-alpine
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
@@ -35,7 +35,7 @@ services:
     networks:
       proxy:
   server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.6.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.10.4}
     container_name: authentik_server
     restart: unless-stopped
     command: server
@@ -50,6 +50,9 @@ services:
       - ./custom-templates:/templates
     env_file:
       - .env
+    #ports:
+    #  - "${COMPOSE_PORT_HTTP:-9000}:9000"
+    #  - "${COMPOSE_PORT_HTTPS:-9443}:9443"
     depends_on:
       - postgresql
       - redis
@@ -58,18 +61,18 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authentik.entrypoints=http"
-      - "traefik.http.routers.authentik.rule=Host(`authentik.domain.io.vn`)"
+      - "traefik.http.routers.authentik.rule=Host(`authentik.tkp.io.vn`)"
       - "traefik.http.middlewares.authentik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.authentik.middlewares=authentik-https-redirect"
       - "traefik.http.routers.authentik-secure.entrypoints=https"
-      - "traefik.http.routers.authentik-secure.rule=Host(`authentik.domain.io.vn`)"
+      - "traefik.http.routers.authentik-secure.rule=Host(`authentik.tkp.io.vn`)"
       - "traefik.http.routers.authentik-secure.tls=true"
       - "traefik.http.routers.authentik-secure.service=authentik"
       - "traefik.http.services.authentik.loadbalancer.server.scheme=https" 
       - "traefik.http.services.authentik.loadbalancer.server.port=9443"
       - "traefik.docker.network=proxy"
   worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.6.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.10.4}
     restart: unless-stopped
     command: worker
     environment:
@@ -103,7 +106,7 @@ volumes:
     driver: local
   redis:
     driver: local
-
+  
 networks:
   proxy:
     external: true
