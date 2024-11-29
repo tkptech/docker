@@ -9,18 +9,25 @@ services:
   #  ports:
   #   - 3000:3000
     environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - WUD_AUTH_BASIC_VOQUYEN84_USER=voquyen84
+      - WUD_AUTH_BASIC_VOQUYEN84_HASH=$$apr1$$hlns9og5$$TykUqkISyd6N38W4q1sI60
+      - WUD_TRIGGER_GOTIFY_LOCAL_URL=https://gotify.tkp.io.vn
+      - WUD_TRIGGER_GOTIFY_LOCAL_TOKEN=
       - WUD_WATCHER_LOCAL_WATCHALL=true
-      - WUD_WATCHER_MYREMOTEHOST_HOST=192.168.1.103, 192.168.1.106
+      - WUD_WATCHER_MYREMOTEHOST1_HOST=192.168.1.103
+      - WUD_WATCHER_MYREMOTEHOST2_HOST=192.168.1.106
+      - WUD_WATCHER_MYREMOTEHOST3_HOST=192.168.1.107
     networks:
        proxy:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.whats-up-docker.entrypoints=http"
-      - "traefik.http.routers.whats-up-docker.rule=Host(`wud.domain.io.vn`)"
+      - "traefik.http.routers.whats-up-docker.rule=Host(`wud.tkp.io.vn`)"
       - "traefik.http.middlewares.whats-up-docker-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.whats-up-docker.middlewares=whats-up-docker-https-redirect"
       - "traefik.http.routers.whats-up-docker-secure.entrypoints=https"
-      - "traefik.http.routers.whats-up-docker-secure.rule=Host(`wud.domain.io.vn`)"
+      - "traefik.http.routers.whats-up-docker-secure.rule=Host(`wud.tkp.io.vn`)"
       - "traefik.http.routers.whats-up-docker-secure.tls=true"
       - "traefik.http.routers.whats-up-docker-secure.service=whats-up-docker"
       - "traefik.http.services.whats-up-docker.loadbalancer.server.port=3000"
