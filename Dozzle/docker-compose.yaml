@@ -13,6 +13,8 @@ services:
       - DOZZLE_ENABLE_ACTIONS=true
       - DOZZLE_NO_ANALYTICS=true
       - DOZZLE_REMOTE_HOST=tcp://192.168.1.103:2375,tcp://192.168.1.106:2375,tcp://192.168.1.107:2375
+      - DOZZLE_AUTH_PROVIDER=simple
+      - DOZZLE_AUTH_TTL=48h
     healthcheck:
       test: ["CMD", "/dozzle", "healthcheck"]
       interval: 3s
@@ -21,6 +23,7 @@ services:
       start_period: 30s  
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # disable when using socket proxy
+      - ./data:/data
     security_opt:
       - no-new-privileges:true
     labels:
