@@ -1,40 +1,35 @@
 version: "3"
-secrets:
-  access_token:
-    file: access_token
 services:
   watchtower:
     image: containrrr/watchtower
     restart: unless-stopped
-    secrets:
-      - access_token
     container_name: watchtower
     security_opt:
       - no-new-privileges=true
     environment:
-      - TZ=Asia/Ho_Chi_Minh              
-      - WATCHTOWER_CLEANUP=true                       # remove old images after update (useful for saving space)
-      - WATCHTOWER_ROLLING_RESTART=true
+      - TZ=Asia/Ho_Chi_Minh
+      - WATCHTOWER_SCHEDULE=0 0 19 * * *             
+      - WATCHTOWER_CLEANUP=true                        # remove old images after update (useful for saving space)
       - WATCHTOWER_HTTP_API_TOKEN=mytoken
       - WATCHTOWER_HTTP_API_METRICS=true
       - WATCHTOWER_NOTIFICATIONS=gotify
-      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.domain.io.vn
-      - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=/run/secrets/access_token
-      # - WATCHTOWER_DISABLE_CONTAINERS=traefik crowdsec bouncer-traefik deconz frigate home-assistant homeassistant-db              # the below will ignore labels set. It is worth checking out labels as that can be a more scalabe solution (automatic)
-      # - DOCKER_HOST=tcp://hostname:port              # the docker host can also be remote by specifying tcp     
-      # - WATCHTOWER_POLL_INTERVAL=86400               # how frequently to check for images (default is 24 hours)    
-      # - WATCHTOWER_INCLUDE_RESTARTING=true           # choose whether to restart the containers after updates    
-      # - WATCHTOWER_INCLUDE_STOPPED=true              # choose whether to update stopped and exited containers    
-      # - WATCHTOWER_REVIVE_STOPPED=true               # this will start containers that were stopped or exited if they are updated  
-      # - WATCHTOWER_MONITOR_ONLY=true                 # watchtower can behave like DIUN by only notifying, and not updating
+      - WATCHTOWER_NOTIFICATION_GOTIFY_URL=https://gotify.tkp.io.vn
+      - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN=A78.1PLGIempzkc
+      - WATCHTOWER_NOTIFICATION_GOTIFY_TLS_SKIP_VERIFY=true   
+      - WATCHTOWER_INCLUDE_RESTARTING=true            # choose whether to restart the containers after updates    
+      - WATCHTOWER_INCLUDE_STOPPED=true               # choose whether to update stopped and exited containers
+      # - DOCKER_HOST=tcp://192.168.1.107:2375          # the docker host can also be remote by specifying tcp
+      # - WATCHTOWER_REVIVE_STOPPED=true                # this will start containers that were stopped or exited if they are updated
+      # - WATCHTOWER_MONITOR_ONLY=true                  # watchtower can behave like DIUN by only notifying, and not updating
+      # - WATCHTOWER_POLL_INTERVAL=86400                # how frequently to check for images (default is 24 hours)
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    #  - /root/.docker/config.json:/config.json - Enable this when using a custom repo     
+    # - /root/.docker/config.json:/config.json          # Enable this when using a custom repo
     ports:
       - 8080:8080
-    command: --debug --http-api-update                 # change this interval to whatever suits you
+    command: --debug --http-api-update                  # change this interval to whatever suits you
     networks:
       - local
 networks:
