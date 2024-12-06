@@ -7,7 +7,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Etc/UTC
+      - TZ=Asia/Ho_Chi_Minh
       - MONGO_USER=unifi
       - MONGO_PASS=5nHgg3G0cH9d
       - MONGO_HOST=unifi-db
@@ -18,7 +18,7 @@ services:
    #   - MONGO_TLS= #optional
    #   - MONGO_AUTHSOURCE= #optional
     volumes:
-      - /home/ubuntu/docker/unifi-controller:/config
+      - ./config:/config
     ports:
       - 8443:8443
       - 3478:3478/udp
@@ -32,11 +32,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.unifi.entrypoints=http"
-      - "traefik.http.routers.unifi.rule=Host(`unifi.jimsgarage.co.uk`)"
+      - "traefik.http.routers.unifi.rule=Host(`unifi.tkp.io.vn`)"
       - "traefik.http.middlewares.unifi-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.unifi.middlewares=unifi-https-redirect"
       - "traefik.http.routers.unifi-secure.entrypoints=https"
-      - "traefik.http.routers.unifi-secure.rule=Host(`unifi.jimsgarage.co.uk`)"
+      - "traefik.http.routers.unifi-secure.rule=Host(`unifi.tkp.io.vn`)"
       - "traefik.http.routers.unifi-secure.tls=true"
       - "traefik.http.routers.unifi-secure.service=unifi"
       - "traefik.http.services.unifi.loadbalancer.server.port=8443"
@@ -50,8 +50,8 @@ services:
     image: docker.io/mongo:4.4
     container_name: unifi-db
     volumes:
-      - /home/ubuntu/docker/unifi-controller-db:/data/db
-      - /home/ubuntu/docker-compose/unifi-controller/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./unifi-controller-db:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
       unifi:
     restart: unless-stopped
