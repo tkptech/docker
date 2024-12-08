@@ -9,13 +9,13 @@ services:
       #- /dev/bus/usb:/dev/bus/usb
       - /dev/apex_0:/dev/apex_0
       - /dev/apex_1:/dev/apex_1
-      #- /dev/dri/renderD128:/dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+      - /dev/dri/renderD128:/dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./config.yml:/config/config.yml:ro
+      - ./frigate/config.yml:/config/config.yml:ro
       - /mnt/clips:/media/frigate/clips
       - /mnt/recordings:/media/frigate/recordings
-      - ./database:/media/frigate
+      - ./frigate/database:/media/frigate
       - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
         target: /tmp/cache
         tmpfs:
@@ -26,6 +26,9 @@ services:
       - "8554:8554" # RTSP feeds
     environment:
       FRIGATE_RTSP_PASSWORD: "password"
+    networks:
+      - proxy
+      - frigate
     security_opt:
       - no-new-privileges:true
     labels:
@@ -35,12 +38,27 @@ services:
       - "traefik.http.middlewares.frigate-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.frigate.middlewares=frigate-https-redirect"
       - "traefik.http.routers.frigate-secure.entrypoints=https"
-      - "traefik.http.routers.frigate-secure.rule=Host(`frigate.jtkp.io.vn`)"
+      - "traefik.http.routers.frigate-secure.rule=Host(`frigate.tkp.io.vn`)"
       - "traefik.http.routers.frigate-secure.tls=true"
       - "traefik.http.routers.frigate-secure.service=frigate"
       - "traefik.http.services.frigate.loadbalancer.server.port=5000"
       - "traefik.docker.network=proxy"
+ 
+  mosquitto:  
+    image: eclipse-mosquitto  
+    container_name: mosquitto  
+    restart: unless-stopped  
+    volumes:  
+      - ./mosquitto:/mosquitto  
+      - ./mosquitto/data:/mosquitto/data  
+      - ./mosquitto/log:/mosquitto/log  
+    ports:  
+      - 1883:1883  
+      - 9001:9001
+    networks:
+      - frigate
 
 networks:
   proxy:
+  frigate
     external: true
