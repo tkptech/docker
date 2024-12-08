@@ -60,5 +60,5 @@ services:
 
 networks:
   proxy:
-  frigate
+  frigate:
     external: true
