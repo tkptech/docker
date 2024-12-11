@@ -1,4 +1,4 @@
-Commands List for CrowdSec :
+Commands List for CrowdSec
 
 ```
 docker exec crowdsec cscli bouncers add crowdsecBouncer
