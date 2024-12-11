@@ -2,7 +2,7 @@
 ```
 docker exec crowdsec cscli bouncers add crowdsecBouncer
 ```
-# Generate API key, One-Time generateable only.Keep safe!
+# Generate API key, One-Time generateable only. Keep safe!
 ```
 docker exec crowdsec cscli metrics
 ```
