@@ -17,7 +17,7 @@ services:
     volumes:
       - ./config:/config
     networks:
-      - proxy:
+      - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.code-server.entrypoints=http"
