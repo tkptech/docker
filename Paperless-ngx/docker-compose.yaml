@@ -35,6 +35,7 @@ services:
   broker:
     image: docker.io/library/redis:7
     restart: unless-stopped
+    container_name: paperless-broker
     volumes:
       - redisdata:/data
     networks:
@@ -43,6 +44,7 @@ services:
   db:
     image: docker.io/library/postgres:15
     restart: unless-stopped
+    container_name: paperless-db
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -55,6 +57,7 @@ services:
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
+    container_name: paperless-webserver
     depends_on:
       - db
       - broker
@@ -64,8 +67,8 @@ services:
     #ports:
     #  - "8005:8000"
     volumes:
-      - data:/usr/src/paperless/data
-      - media:/usr/src/paperless/media
+      - ./data:/usr/src/paperless/data
+      - /mnt/document:/usr/src/paperless/media
       - ./export:/usr/src/paperless/export
       - ./consume:/usr/src/paperless/consume
     env_file: .env
@@ -76,31 +79,32 @@ services:
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
       PAPERLESS_URL: https://paperless.tkp.io.vn
-      PAPERLESS_ADMIN_USER: paperless
-      PAPERLESS_ADMIN_PASSWORD: paperless
+      PAPERLESS_ADMIN_USER: admin
+      PAPERLESS_ADMIN_PASSWORD: password
       PAPERLESS_APPS: "allauth.socialaccount.providers.openid_connect"
       # Find out how to configure Authentik: https://youtu.be/enwFWELCYJo
-      PAPERLESS_SOCIALACCOUNT_PROVIDERS: '{"openid_connect": {"APPS": [{"provider_id": "authentik","name": "Authentik SSO","client_id": "BnxpFXvscduU2PdAdPaCelphhDYpAXo9upbAUS3F","secret": "0JcyunvA0Ra25i49zULTbro0jdbH9gHrdnSDExT9Ze2TNoB8so9B8AbdB7riYjYHPZfwuWtAeTCpwPAi2Sct7M8w3y8VTPPxwgFG1JzdoWdxLgUz0NO6l3L2UFBmzQ5m","settings": { "server_url": "https://authentik.jimsgarage.co.uk/application/o/paperless-ngx/.well-known/openid-configuration"}}]}}'
+      PAPERLESS_SOCIALACCOUNT_PROVIDERS: '{"openid_connect": {"APPS": [{"provider_id": "authentik","name": "Authentik SSO","client_id": "gacnWYoaSIyacJYM8z1cV8p5cpn5XKwujTbNSHn2","secret": "dxlSFCuX9hL62DcAO3snC3S1cgaxxq6R757bZ6eXndr7Vo7oPxT29Ue4C3Rp1xAoemo8uqTNUgXqpZFalur3jzW6uJ3BQQO9YnKvrvgegz3nij2GwMPUYyFZSdlqHeW7","settings": { "server_url": "https://authentik.tkp.io.vn/application/o/paperless-ngx/.well-known/openid-configuration"}}]}}'
     networks:
       paperless:
       proxy:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.paperless.entrypoints=http"
-      - "traefik.http.routers.paperless.rule=Host(`paperless.domain.io.vn`)"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.tkp.io.vn`)"
       - "traefik.http.middlewares.paperless-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.paperless.middlewares=paperless-https-redirect"
       - "traefik.http.routers.paperless-secure.entrypoints=https"
-      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.domain.io.vn`)"
+      - "traefik.http.routers.paperless-secure.rule=Host(`paperless.tkp.io.vn`)"
       - "traefik.http.routers.paperless-secure.tls=true"
-      - "traefik.http.routers.paperless-secure.tls.certresolver=cloudflare" # change this to your cert resolver
-      - "traefik.http.routers.paperless-secure.service=paperless" 
+      - "traefik.http.routers.paperless-secure.tls.certresolver=cloudflare"            # change this to your cert resolver
+      - "traefik.http.routers.paperless-secure.service=paperless"
       - "traefik.http.services.paperless.loadbalancer.server.port=8000"
       - "traefik.docker.network=proxy"
 
   gotenberg:
-    image: docker.io/gotenberg/gotenberg:7.10
+    image: docker.io/gotenberg/gotenberg:8.7
     restart: unless-stopped
+    container_name: webserver-gotenberg
 
     # The gotenberg chromium route is used to convert .eml files. We do not
     # want to allow external content like tracking pixels or even javascript.
@@ -114,12 +118,11 @@ services:
   tika:
     image: ghcr.io/paperless-ngx/tika:latest
     restart: unless-stopped
+    container_name: paperless-tika
     networks:
       paperless:
 
 volumes:
-  data:
-  media:
   pgdata:
   redisdata:
 
