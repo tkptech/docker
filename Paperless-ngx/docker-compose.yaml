@@ -104,7 +104,7 @@ services:
   gotenberg:
     image: docker.io/gotenberg/gotenberg:8.7
     restart: unless-stopped
-    container_name: webserver-gotenberg
+    container_name: paperless-gotenberg
 
     # The gotenberg chromium route is used to convert .eml files. We do not
     # want to allow external content like tracking pixels or even javascript.
