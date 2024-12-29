@@ -1,0 +1,29 @@
+services:
+  glance:
+    image: glanceapp/glance
+    container_name: glance
+    restart: unless-stopped
+    volumes:
+      - ./glance.yml:/app/glance.yml
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glance.entrypoints=http"
+      - "traefik.http.routers.glance.rule=Host(`glance.tkp.io.vn`)"
+      - "traefik.http.middlewares.glance-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.glance.middlewares=it-tools-https-redirect"
+      - "traefik.http.routers.glance-secure.entrypoints=https"
+      - "traefik.http.routers.glance-secure.rule=Host(`glance.tkp.io.vn`)"
+      - "traefik.http.routers.glance-secure.tls=true"
+      - "traefik.http.routers.glance-secure.service=glance"
+      - "traefik.http.services.glance.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  proxy:
+    external: true
