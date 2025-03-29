@@ -31,18 +31,7 @@ services:
       - frigate
     security_opt:
       - no-new-privileges:true
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frigate.entrypoints=http"
-      - "traefik.http.routers.frigate.rule=Host(`frigate.tkp.io.vn`)"
-      - "traefik.http.middlewares.frigate-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.frigate.middlewares=frigate-https-redirect"
-      - "traefik.http.routers.frigate-secure.entrypoints=https"
-      - "traefik.http.routers.frigate-secure.rule=Host(`frigate.tkp.io.vn`)"
-      - "traefik.http.routers.frigate-secure.tls=true"
-      - "traefik.http.routers.frigate-secure.service=frigate"
-      - "traefik.http.services.frigate.loadbalancer.server.port=5000"
-      - "traefik.docker.network=proxy"
+
  
   mosquitto:  
     image: eclipse-mosquitto  
