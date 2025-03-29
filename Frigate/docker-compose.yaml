@@ -5,49 +5,27 @@ services:
     # privileged: true # this may not be necessary for all setups
     restart: unless-stopped
     image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "256mb"
     devices:
       #- /dev/bus/usb:/dev/bus/usb
-      - /dev/apex_0:/dev/apex_0
-      - /dev/apex_1:/dev/apex_1
+      #- /dev/apex_0:/dev/apex_0
+      #- /dev/apex_1:/dev/apex_1
       - /dev/dri/renderD128:/dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./frigate/config.yml:/config/config.yml:ro
+      - ./config:/config
       - /mnt/clips:/media/frigate/clips
       - /mnt/recordings:/media/frigate/recordings
-      - ./frigate/database:/media/frigate
+      - ./database:/media/frigate
       - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
         target: /tmp/cache
         tmpfs:
           size: 2000000000
     ports:
-      - "5000:5000"
+      - "8971:8971"
+     # - "5000:5000"
       - "1935:1935" # RTMP feeds (deprecated)
       - "8554:8554" # RTSP feeds
     environment:
       FRIGATE_RTSP_PASSWORD: "password"
-    networks:
-      - proxy
-      - frigate
-    security_opt:
-      - no-new-privileges:true
-
- 
-  mosquitto:  
-    image: eclipse-mosquitto  
-    container_name: mosquitto  
-    restart: unless-stopped  
-    volumes:  
-      - ./mosquitto:/mosquitto  
-      - ./mosquitto/data:/mosquitto/data  
-      - ./mosquitto/log:/mosquitto/log  
-    ports:  
-      - 1883:1883  
-      - 9001:9001
-    networks:
-      - frigate
-
-networks:
-  proxy:
-  frigate:
-    external: true
+      PLUS_API_KEY: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
